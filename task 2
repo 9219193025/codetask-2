@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Forecast</h1>
+        <input type="text" id="cityInput" placeholder="Enter city name">
+        <button id="getWeatherBtn">Get Weather</button>
+        <div id="weatherDisplay">
+            <h2 id="cityName"></h2>
+            <p id="temperature"></p>
+            <p id="weatherDescription"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 80%;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#weatherDisplay {
+    margin-top: 20px;
+}
+
+#cityName {
+    font-size: 1.5em;
+}
+
+#temperature {
+    font-size: 1.2em;
+    color: #ff4500;
+}
+
+#weatherDescription {
+    font-size: 1em;
+    color: #555;
+}
+document.getElementById('getWeatherBtn').addEventListener('click', function() {
+    const city = document.getElementById('cityInput').value;
+    const apiKey = 'YOUR_API_KEY';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === 200) {
+                document.getElementById('cityName').innerText = data.name;
+                document.getElementById('temperature').innerText = `Temperature: ${data.main.temp}°C`;
+                document.getElementById('weatherDescription').innerText = data.weather[0].description;
+            } else {
+                alert('City not found. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching the weather data:', error);
+        });
+});
